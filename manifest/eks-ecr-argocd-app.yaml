@@ -1,0 +1,36 @@
+# eks-ecr-argocd.yaml
+apiVersion: v1
+kind: Service   
+metadata:
+  name: eks-ecr-argocd-service
+spec:
+  selector:
+    app.kubernetes.io/name: eks-ecr-argocd
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eks-ecr-argocd-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: eks-ecr-argocd
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: eks-ecr-argocd
+    spec:
+      containers:
+      - name: eks-ecr-argocd-container
+        image: 318889093234.dkr.ecr.ap-northeast-2.amazonaws.com/eks-thrid:latest
+        ports:
+          - protocol: TCP
+            containerPort: 8080
